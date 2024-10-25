@@ -1,0 +1,97 @@
+.TH KEYCHAIN-BITWARDEN-SYNC 1 "October 2024" "Version 1.0" "User Commands"
+
+.SH NAME
+keychain-bitwarden-sync \- synchronize passwords from macOS Keychain to Bitwarden
+
+.SH SYNOPSIS
+.B keychain-bitwarden-sync
+[\fB\-\-write\fR]
+[\fB\-v\fR|\fB\-\-verbose\fR]
+
+.SH DESCRIPTION
+.B keychain-bitwarden-sync
+is a command-line tool that synchronizes password entries from the macOS Keychain to a Bitwarden vault. By default, it operates in a read-only mode that identifies differences between the two password stores without making any changes.
+
+.SH OPTIONS
+.TP
+.BR \-\-write
+Enable writing updates to Bitwarden. Without this flag, the tool operates in read-only mode and only reports what changes would be made.
+
+.TP
+.BR \-v ", " \-\-verbose
+Enable verbose logging output. This provides detailed information about the synchronization process, including debug-level messages.
+
+.SH SECURITY
+The tool requires authentication with both the macOS Keychain and Bitwarden:
+
+.IP \[bu] 2
+Keychain access is handled through the system's security framework
+.IP \[bu] 2
+Bitwarden authentication requires interactive input of email and master password
+.IP \[bu] 2
+Passwords are never written to disk or displayed in logs
+.IP \[bu] 2
+Session tokens are stored only in memory during execution
+
+.SH EXIT STATUS
+.TP
+.B 0
+Successful completion
+.TP
+.B 1
+General error (authentication failure, sync error, etc.)
+.TP
+.B 2
+Command-line parsing error
+
+.SH EXAMPLES
+.TP
+Check for differences between Keychain and Bitwarden:
+.B keychain-bitwarden-sync
+
+.TP
+Synchronize passwords from Keychain to Bitwarden with detailed logging:
+.B keychain-bitwarden-sync --write --verbose
+
+.SH ENVIRONMENT
+.TP
+.B BW_SESSION
+If set, uses this Bitwarden session token instead of requesting authentication
+
+.SH FILES
+The tool does not create or maintain any permanent files. All operations are performed in memory.
+
+.SH DEPENDENCIES
+.IP \[bu] 2
+Python 3.7 or higher
+.IP \[bu] 2
+Bitwarden CLI (bw)
+.IP \[bu] 2
+Python keyring package
+
+.SH NOTES
+.IP \[bu] 2
+Only performs one-way synchronization from Keychain to Bitwarden
+.IP \[bu] 2
+Does not modify or delete existing Bitwarden entries
+.IP \[bu] 2
+Creates new Bitwarden entries with standardized naming: "service - account"
+.IP \[bu] 2
+Includes timestamp in notes field for tracking import date
+
+.SH BUGS
+Report bugs to: https://github.com/yourusername/keychain-bitwarden-sync/issues
+
+.SH AUTHOR
+Written by [Your Name]
+
+.SH COPYRIGHT
+Copyright © 2024 [Your Name].
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+.SH SEE ALSO
+.BR security (1),
+.BR bw (1),
+.BR keychain (1)
